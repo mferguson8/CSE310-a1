@@ -1,8 +1,8 @@
 /*
 CSE 310 Hash Function DIY Contest
 Instructor: Yiran "Lawrence" Luo
-Your name(s):
-Your team alias: 
+Your name(s): Michael Ferguson
+Your team alias: None
 */
 
 #include <iostream>

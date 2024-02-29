@@ -5,4 +5,4 @@
 
 using namespace std;
 
-int hash_function(string text);
+int hash_function(string text, int tableSize);
