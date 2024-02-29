@@ -44,10 +44,11 @@ public:
     }
 
     // Function to insert a key into the hash table
-    void insert(int hash, const std::string &key)
+    void insert(const std::string &key)
     {
+        int hashed = hash_function(key, 9);
         Node *newNode = new Node(key);
-        table[hash].push_back(newNode);
+        table[hashed].push_back(newNode);
     }
     // Function to calculate the standard deviation of the hash table
     float calculateMean()
