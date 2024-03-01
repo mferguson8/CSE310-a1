@@ -9,6 +9,7 @@ Your team alias: None
 #include <iomanip>
 #include <string>
 #include "hash.h"
+
 using namespace std;
 
 int main()
@@ -39,7 +40,6 @@ int main()
     // which puts out the placeholders only.
 
     // Your time to shine starts now
-    // Create a hash table
 
     HashTable hashTable(k);
 
@@ -53,7 +53,8 @@ int main()
     cout << "==== Printing the contents of the first 5 slots ====" << endl;
     for (int i = 0; i < 5; i++)
     {
-        cout << "Slot " << i << ": " << hashTable.getSlotContents(i) << endl;
+        cout << "Slot " << i << ": ";
+        hashTable.printSlotContents(i);
     }
 
     // Print the slot lengths

@@ -2,6 +2,7 @@
 #include <string>
 #include <cmath>
 #include "hash.h"
+#include <list>
 
 using namespace std;
 
@@ -16,96 +17,80 @@ int hash_function(string text, int tableSize)
     }
     return hashValue % tableSize;
 }
-#include <list>
-// Node structure for linked list
-struct Node
+
+HashTable::HashTable(int tableSize)
 {
-    std::string key;
-    Node *next;
+    table = new list<Node *>[tableSize];
+    size = tableSize;
+}
 
-    Node(const std::string &k) : key(k), next(nullptr) {}
-};
-
-class HashTable
+HashTable::~HashTable()
 {
-private:
-    int size;
-    std::list<Node *> *table;
+    delete[] table;
+}
 
-public:
-    HashTable(int tableSize) : size(tableSize)
-    {
-        table = new std::list<Node *>[size];
-    }
+void HashTable::insert(const std::string &key)
+{
+    int hashed = hash_function(key, size);
+    Node *newNode = new Node(key);
+    table[hashed].push_back(newNode);
+}
 
-    ~HashTable()
-    {
-        delete[] table;
-    }
+float HashTable::calculateMean()
+{
+    int totalLength = 0;
+    int nonEmptySlots = 0;
 
-    // Function to insert a key into the hash table
-    void insert(const std::string &key)
+    for (int i = 0; i < size; ++i)
     {
-        int hashed = hash_function(key, 9);
-        Node *newNode = new Node(key);
-        table[hashed].push_back(newNode);
-    }
-    // Function to calculate the standard deviation of the hash table
-    float calculateMean()
-    {
-        int totalLength = 0;
-        int nonEmptySlots = 0;
-
-        for (int i = 0; i < size; ++i)
+        if (!table[i].empty())
         {
-            if (!table[i].empty())
-            {
-                totalLength += table[i].size();
-                nonEmptySlots++;
-            }
+            totalLength += table[i].size();
+            nonEmptySlots++;
         }
-
-        if (nonEmptySlots == 0)
-        {
-            return 0; // To avoid division by zero
-        }
-
-        return static_cast<float>(totalLength) / nonEmptySlots;
     }
-
-    // Function to calculate the standard deviation of the slot lengths
-    float calculateStandardDeviation()
+    if (nonEmptySlots == 0)
     {
-        float mean = calculateMean();
-        float variance = 0;
-
-        for (int i = 0; i < size; ++i)
-        {
-            if (!table[i].empty())
-            {
-                int length = table[i].size();
-                variance += pow(length - mean, 2);
-            }
-        }
-
-        variance /= size; // dividing by total number of slots
-        float standardDeviation = sqrt(variance);
-        return standardDeviation;
+        return 0; // To avoid division by zero
     }
-    // Function to get the lengths of all slots in the hash table
-    int getSlotLength(int slot)
+
+    return static_cast<float>(totalLength) / nonEmptySlots;
+}
+double HashTable::calculateStandardDeviation()
+{
+    float mean = calculateMean();
+    float variance = 0;
+
+    for (int i = 0; i < size; ++i)
     {
-        return table[slot].size();
-    }
-
-    // Function to get the contents of a specific slot in the hash table
-    std::list<std::string> getSlotContents(int slot)
-    {
-        std::list<std::string> slotContents;
-        for (Node *curr : table[slot])
+        if (!table[i].empty())
         {
-            slotContents.push_back(curr->key);
+            int length = table[i].size();
+            variance += pow(length - mean, 2);
         }
-        return slotContents;
     }
-};
+    variance /= size; // dividing by total number of slots
+    float standardDeviation = sqrt(variance);
+    return standardDeviation;
+}
+int HashTable::getSlotLengths(int slotIndex)
+{
+    return table[slotIndex].size();
+}
+list<string> HashTable::getSlotContents(int slot)
+{
+    list<string> slotContents;
+    for (Node *curr : table[slot])
+    {
+        slotContents.push_back(curr->key);
+    }
+    return slotContents;
+}
+void HashTable::printSlotContents(int slot)
+{
+    for (Node *curr : table[slot])
+    {
+        cout << curr->key << " ";
+    }
+    cout << endl;
+}

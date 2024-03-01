@@ -24,11 +24,13 @@ public:
     HashTable(int tableSize);
     ~HashTable();
 
-    void insert(int hash, const std::string &key);
+    void insert(const std::string &key);
     double calculateStandardDeviation();
 
     int getSlotLengths(int slotIndex);
     std::list<std::string> getSlotContents(int slot);
+    void printSlotContents(int slot);
+    float calculateMean();
 };
 
 #endif
